@@ -4,8 +4,11 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { z, ZodError } from 'zod'
 import { userModel } from "./db";
+import dotenv from "dotenv";
 
 const app = express();
+const PORT = 3000;
+dotenv.config()
 
 app.use(express.json())
 
@@ -47,6 +50,9 @@ app.post('/api/v1/signup', async (req, res) => {
 })
 
 app.post('/api/v1/signin', (req, res) => {
+    const { email, password } = req.body;
+
+    const findUser = userModel.findOne()
 
 })
 
@@ -69,4 +75,16 @@ app.post('/api/v1/brain/share', (req, res) => {
 app.post('/api/v1/brain/:shareLink', (req, res) => {
 
 })
-app.listen(3000)
+async function main() {
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl) {
+        throw new Error("DATABASE_URL environment variable is not defined.");
+    }
+    await mongoose.connect(dbUrl);
+
+    app.listen(PORT, () => {
+        console.log("server is running on http://localhost:3000");
+    })
+}
+
+main()

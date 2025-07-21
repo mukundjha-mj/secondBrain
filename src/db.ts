@@ -1,7 +1,8 @@
 import mongoose from "mongoose"
+import dotenv from "dotenv";
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
-mongoose.connect("mongodb+srv://mukundjha204:sVbuyUP6wSOCsO0G@cluster0.srrhil7.mongodb.net/secondBrain")
+
 
 
 const contentTypes = ['image', 'video', 'article', 'audio'];
