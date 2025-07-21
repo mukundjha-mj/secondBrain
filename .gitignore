@@ -22,5 +22,27 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
 .env
+
+# Dependency directories
+node_modules/
+jspm_packages/
+# TypeScript cache
+*.tsbuildinfo
+# Compiled JavaScript files
+*.js
+*.jsx
+# Compiled CSS files
+*.css
+# Compiled output
+/dist
+# Coverage directory used by tools like istanbul
+coverage/
+# Optional npm cache directory
+.npm
+# Optional eslint cache
+.eslintcache
+# Optional stylelint cache
+.stylelintcache
+# Optional cache directory for prettier
+.prettier-cache
