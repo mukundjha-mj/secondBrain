@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
+mongoose.connect("mongodb+srv://mukundjha204:sVbuyUP6wSOCsO0G@cluster0.srrhil7.mongodb.net/secondBrain")
 
 
 const contentTypes = ['image', 'video', 'article', 'audio'];
@@ -35,6 +36,7 @@ const contentSchema = new Schema({
 const userModel = mongoose.model('user', userSchema);
 const Tag = mongoose.model('Tag', tagSchema)
 const linkModel = mongoose.model('link', linkSchema);
+const contentModel = mongoose.model('content', contentSchema);
 
 export {
     userModel,
