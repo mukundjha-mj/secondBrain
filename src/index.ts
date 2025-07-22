@@ -2,13 +2,13 @@ import express from "express"
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { z, ZodError } from 'zod'
+import { z } from 'zod'
 import { userModel } from "./db";
-import dotenv from "dotenv";
+import { DATABASE_URL, JWT_SECRET } from "./config";
+
 
 const app = express();
 const PORT = 3000;
-dotenv.config()
 
 app.use(express.json())
 
@@ -49,10 +49,30 @@ app.post('/api/v1/signup', async (req, res) => {
 
 })
 
-app.post('/api/v1/signin', (req, res) => {
+app.post('/api/v1/signin', async (req, res) => {
     const { email, password } = req.body;
 
-    const findUser = userModel.findOne()
+    const findUser = await userModel.findOne({ email });
+    if (!findUser) {
+        res.status(404).json({
+            message: "User not Found"
+        });
+        return
+    }
+    const isPasswordMatch = await bcrypt.compare(password, findUser.password);
+    if (isPasswordMatch) {
+        const token = jwt.sign({
+            id: findUser._id.toString()
+        }, JWT_SECRET);
+        res.json({
+            message: "Signed IN",
+            token
+        })
+    } else {
+        return res.status(404).json({
+            message: "Incorrect Credentials"
+        })
+    }
 
 })
 
@@ -75,16 +95,15 @@ app.post('/api/v1/brain/share', (req, res) => {
 app.post('/api/v1/brain/:shareLink', (req, res) => {
 
 })
-async function main() {
-    const dbUrl = process.env.DATABASE_URL;
-    if (!dbUrl) {
-        throw new Error("DATABASE_URL environment variable is not defined.");
-    }
-    await mongoose.connect(dbUrl);
 
-    app.listen(PORT, () => {
-        console.log("server is running on http://localhost:3000");
+mongoose.connect(DATABASE_URL)
+    .then(() => {
+        console.log("Connected to DataBase");
+        app.listen(PORT, () => {
+            console.log("server is running on http://localhost:3000");
+        })
     })
-}
+    .catch((e) => {
+        console.log("Database connection Error", e);
 
-main()
+    })

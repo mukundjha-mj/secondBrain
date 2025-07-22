@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import dotenv from "dotenv";
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -11,7 +10,7 @@ const contentTypes = ['image', 'video', 'article', 'audio'];
 
 const userSchema = new Schema({
     email: { type: String, unique: true },
-    password: String,
+    password: { type: String, required: true},
     firstName: String,
     lastName: String
 })
