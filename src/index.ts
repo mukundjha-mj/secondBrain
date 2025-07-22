@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { z } from 'zod'
 import { contentModel, tagModel, userModel } from "./db";
-import { DATABASE_URL, JWT_SECRET } from "./config";
+import { DATABASE_URL, JWT_SECRET } from "./etc/secrets/config";
 import { userMiddleware } from "./Middleware";
 
 

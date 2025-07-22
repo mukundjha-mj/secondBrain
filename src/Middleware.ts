@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { JWT_SECRET } from "./config";
+import { JWT_SECRET } from "./etc/secrets/config";
 import jwt from "jsonwebtoken";
 
 declare global {
@@ -17,8 +17,8 @@ const userMiddleware = (req: Request, res: Response, next: NextFunction) =>{
         req.userId = (response as any).id;
         next();
     }else{
-        res.status(4023).json({
-            message: "Authorization header missing"
+        res.status(403).json({
+            message: ""
         })
     }
 }
