@@ -34,12 +34,14 @@ const contentSchema = new Schema({
 
 
 const userModel = mongoose.model('user', userSchema);
-const Tag = mongoose.model('Tag', tagSchema)
+const tagModel = mongoose.model('Tag', tagSchema)
 const linkModel = mongoose.model('link', linkSchema);
 const contentModel = mongoose.model('content', contentSchema);
 
 export {
     userModel,
-    Tag,
-    linkModel
+    tagModel,
+    linkModel,
+    contentModel,
+    contentTypes
 }

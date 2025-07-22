@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { z } from 'zod'
-import { userModel } from "./db";
+import { contentModel, tagModel, userModel } from "./db";
 import { DATABASE_URL, JWT_SECRET } from "./config";
+import { userMiddleware } from "./Middleware";
 
 
 const app = express();
@@ -76,15 +77,59 @@ app.post('/api/v1/signin', async (req, res) => {
 
 })
 
-app.post('/api/v1/content', (req, res) => {
+app.post('/api/v1/content', userMiddleware, async (req, res) => {
+    const { link, type, title, tags = [] } = req.body;
+    const userId = await req.userId
+    try {
+        const tagIds = [];
+        for(const tagTitle of tags){
+            let tag = await tagModel.findOne({
+                title: tagTitle
+            })
+            if(!tag){
+                tag = await tagModel.create({title: tagTitle})
+            }
+            tagIds.push(tag._id);
+        }
+
+        await contentModel.create({
+            link,
+            type,
+            title,
+            tags: tagIds,
+            userId
+        })
+        res.status(200).json({
+            message: "Content added"
+        })
+    } catch (e) {
+        return res.status(411).json({
+            message: "Invalid content",
+            error: e
+        })
+    }
+})
+
+app.get('/api/v1/content', userMiddleware, async (req, res) => {
+    const userId = await req.userId;
+    const content = await contentModel.find({
+        userId: userId 
+    }).populate("userId", "firstName").populate("tags", "title")
+    res.json({
+        content
+    })
 
 })
 
-app.get('/api/v1/content', (req, res) => {
-
-})
-
-app.delete('/api/v1/content', (req, res) => {
+app.delete('/api/v1/content',userMiddleware, async (req, res) => {
+    const contentId = req.body.contentId;
+    await contentModel.deleteMany({
+        _id: contentId,
+        userId: req.userId  
+    })
+    res.json({
+        message: "content deleted"
+    })
 
 })
 
