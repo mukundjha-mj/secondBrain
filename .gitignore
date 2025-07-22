@@ -46,4 +46,3 @@ coverage/
 .stylelintcache
 # Optional cache directory for prettier
 .prettier-cache
-config.ts
