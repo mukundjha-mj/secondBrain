@@ -2,10 +2,11 @@ import express from "express"
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { z } from 'zod'
-import { contentModel, tagModel, userModel } from "./db";
+import { string, z } from 'zod'
+import { contentModel, linkModel, tagModel, userModel } from "./db";
 import { DATABASE_URL, JWT_SECRET } from "./etc/secrets/config";
 import { userMiddleware } from "./Middleware";
+import { random } from "./utils";
 
 
 const app = express();
@@ -133,12 +134,74 @@ app.delete('/api/v1/content',userMiddleware, async (req, res) => {
 
 })
 
-app.post('/api/v1/brain/share', (req, res) => {
+app.post('/api/v1/brain/share',userMiddleware, async (req, res) => {
+    const share = req.body.share;
+    if(share){
+        const existingLink = await linkModel.findOne({
+            userId: req.userId
+        })
+        if(existingLink){
+            res.status(200).json({
+                hash: existingLink.hash
+            })
+            return
+        }
+        const hash = random(10);
+        await linkModel.create({
+            userId: req.userId,
+            hash: hash
+        })
+        res.status(200).json({
+            message: "/share/" + hash
+        })
+    
+    } else{
+        await linkModel.deleteOne({
+            userId: req.userId
+        })
+        res.status(200).json({
+        message: "Remove sharable Link"
+    })
+    }
+
+    
 
 })
 
-app.post('/api/v1/brain/:shareLink', (req, res) => {
+app.post('/api/v1/brain/:shareLink', async (req, res) => {
+    const hash = req.params.shareLink;
+    
+    const link = await linkModel.findOne({
+        hash
+    })
 
+    console.log(link);
+    
+    if(!link){
+        res.status(411).json({
+            message: "Sorry Incorrect Input"
+        })
+        return
+    }
+    //userId
+    const content = await contentModel.find({
+        userId: link.userId
+    })
+    const user = await userModel.findOne({
+        _id: link.userId
+    });
+
+    if(!user){
+        res.status(411).json({
+            message: "User not found, error should ideally not happen"
+        })
+        return;
+    }
+
+    res.status(200).json({
+        firstName: user.firstName,
+        content: content
+    })
 })
 
 mongoose.connect(DATABASE_URL)

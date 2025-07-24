@@ -2,22 +2,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const JWT_SECRET: string = process.env.JWT_SECRET || "fallback-secret";
+const JWT_SECRET: string = process.env.JWT_SECRET || "";
 const DATABASE_URL: string = process.env.DATABASE_URL || "";
 
 if (!DATABASE_URL) {
-    console.error("DATABASE_URL environment variable is not set!");
     process.exit(1);
 }
 
-if (!JWT_SECRET || JWT_SECRET === "fallback-secret") {
-    console.error("JWT_SECRET environment variable is not set!");
+if (!JWT_SECRET) {
     process.exit(1);
 }
-
-console.log("Environment variables loaded successfully");
-console.log("DATABASE_URL starts with:", DATABASE_URL.substring(0, 20) + "...");
-
 export {
     JWT_SECRET,
     DATABASE_URL
