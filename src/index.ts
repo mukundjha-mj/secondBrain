@@ -175,7 +175,6 @@ app.post('/api/v1/brain/:shareLink', async (req, res) => {
         hash
     })
 
-    console.log(link);
     
     if(!link){
         res.status(411).json({
@@ -207,9 +206,7 @@ app.post('/api/v1/brain/:shareLink', async (req, res) => {
 mongoose.connect(DATABASE_URL)
     .then(() => {
         console.log("Connected to DataBase");
-        app.listen(PORT, () => {
-            console.log("server is running on http://localhost:3000");
-        })
+        app.listen(PORT)
     })
     .catch((e) => {
         console.log("Database connection Error", e);
