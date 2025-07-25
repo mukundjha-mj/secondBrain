@@ -7,10 +7,15 @@ import { contentModel, linkModel, tagModel, userModel } from "./db";
 import { DATABASE_URL, JWT_SECRET } from "./etc/secrets/config";
 import { userMiddleware } from "./Middleware";
 import { random } from "./utils";
+import cors from "cors";
+
+
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.use(express.json())
 
