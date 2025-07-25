@@ -4,7 +4,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 
 
-const contentTypes = ['image', 'video', 'article', 'audio', 'youtube'];
+const contentTypes = ['image', 'video', 'article', 'audio', 'youtube', 'twitter'];
 
 
 
