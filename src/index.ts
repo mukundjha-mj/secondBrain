@@ -83,6 +83,16 @@ app.post('/api/v1/signin', async (req, res) => {
 
 })
 
+app.get('/api/v1/profile', userMiddleware, async (req, res) =>{
+    const userId = await req.userId;
+    const profile = await userModel.findOne({
+        _id: userId
+    }).select('firstName')
+    res.json({
+        profile
+    })
+})
+
 app.post('/api/v1/content', userMiddleware, async (req, res) => {
     const { link, type, title, tags = [] } = req.body;
     const userId = await req.userId
