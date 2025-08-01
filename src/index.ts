@@ -15,7 +15,10 @@ import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
 
 app.use(express.json())
 
@@ -83,7 +86,7 @@ app.post('/api/v1/signin', async (req, res) => {
 
 })
 
-app.get('/api/v1/profile', userMiddleware, async (req, res) =>{
+app.get('/api/v1/profile', userMiddleware, async (req, res) => {
     const userId = await req.userId;
     const profile = await userModel.findOne({
         _id: userId
@@ -98,12 +101,12 @@ app.post('/api/v1/content', userMiddleware, async (req, res) => {
     const userId = await req.userId
     try {
         const tagIds = [];
-        for(const tagTitle of tags){
+        for (const tagTitle of tags) {
             let tag = await tagModel.findOne({
                 title: tagTitle
             })
-            if(!tag){
-                tag = await tagModel.create({title: tagTitle})
+            if (!tag) {
+                tag = await tagModel.create({ title: tagTitle })
             }
             tagIds.push(tag._id);
         }
@@ -129,7 +132,7 @@ app.post('/api/v1/content', userMiddleware, async (req, res) => {
 app.get('/api/v1/content', userMiddleware, async (req, res) => {
     const userId = await req.userId;
     const content = await contentModel.find({
-        userId: userId 
+        userId: userId
     }).populate("userId", "firstName").populate("tags", "title")
     res.json({
         content
@@ -137,11 +140,11 @@ app.get('/api/v1/content', userMiddleware, async (req, res) => {
 
 })
 
-app.delete('/api/v1/content',userMiddleware, async (req, res) => {
+app.delete('/api/v1/content', userMiddleware, async (req, res) => {
     const contentId = req.body.contentId;
     await contentModel.deleteMany({
         _id: contentId,
-        userId: req.userId  
+        userId: req.userId
     })
     res.json({
         message: "content deleted"
@@ -149,13 +152,13 @@ app.delete('/api/v1/content',userMiddleware, async (req, res) => {
 
 })
 
-app.post('/api/v1/brain/share',userMiddleware, async (req, res) => {
+app.post('/api/v1/brain/share', userMiddleware, async (req, res) => {
     const share = req.body.share;
-    if(share){
+    if (share) {
         const existingLink = await linkModel.findOne({
             userId: req.userId
         })
-        if(existingLink){
+        if (existingLink) {
             res.status(200).json({
                 hash: existingLink.hash
             })
@@ -169,29 +172,29 @@ app.post('/api/v1/brain/share',userMiddleware, async (req, res) => {
         res.status(200).json({
             message: "/share/" + hash
         })
-    
-    } else{
+
+    } else {
         await linkModel.deleteOne({
             userId: req.userId
         })
         res.status(200).json({
-        message: "Remove sharable Link"
-    })
+            message: "Remove sharable Link"
+        })
     }
 
-    
+
 
 })
 
 app.post('/api/v1/brain/:shareLink', async (req, res) => {
     const hash = req.params.shareLink;
-    
+
     const link = await linkModel.findOne({
         hash
     })
 
-    
-    if(!link){
+
+    if (!link) {
         res.status(411).json({
             message: "Sorry Incorrect Input"
         })
@@ -205,7 +208,7 @@ app.post('/api/v1/brain/:shareLink', async (req, res) => {
         _id: link.userId
     });
 
-    if(!user){
+    if (!user) {
         res.status(411).json({
             message: "User not found, error should ideally not happen"
         })
