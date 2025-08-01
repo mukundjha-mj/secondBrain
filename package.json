@@ -26,9 +26,12 @@
     "zod": "^4.0.5"
   },
   "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.3",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/mongoose": "^5.11.96"
-  }
+  "typescript": "^5.4.0",
+  "ts-node": "^10.9.2",
+  "@types/dotenv": "^6.1.1",
+  "@types/express": "^5.0.3",
+  "@types/jsonwebtoken": "^9.0.10",
+  "@types/mongoose": "^5.11.96"
+}
+
 }
