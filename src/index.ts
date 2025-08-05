@@ -17,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const url = [
     "http://localhost:5173",
-    "https://cb67fqtt-5173.inc1.devtunnels.ms"]
+    "https://second-brain-frontend-six.vercel.app/"]
 
 app.use(cors({
 
