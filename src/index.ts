@@ -15,15 +15,9 @@ import { KeepAlive, getServerUrl } from "./keepAlive";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const url = [
-    "http://localhost:5173",
-    "https://second-brain-frontend-six.vercel.app/"]
 
-app.use(cors({
 
-    origin: url,
-    credentials: true,
-}));
+app.use(cors());
 
 app.use(express.json())
 
