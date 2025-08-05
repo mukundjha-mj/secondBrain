@@ -56,12 +56,6 @@ export class KeepAlive {
 
 // Environment detection utility
 export const getServerUrl = (): string => {
-    // Use SERVER_URL from config
-    if (SERVER_URL) {
-        return SERVER_URL;
-    }
-    
-    // Fallback to localhost for development
-    const port = process.env.PORT || 3000;
-    return `http://localhost:${port}`;
+    // Always use SERVER_URL from config (.env file)
+    return SERVER_URL;
 };
