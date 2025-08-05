@@ -56,17 +56,12 @@ export class KeepAlive {
 
 // Environment detection utility
 export const getServerUrl = (): string => {
-    // If running on Render, use the Render URL from environment variables
-    if (process.env.RENDER_EXTERNAL_URL) {
-        return process.env.RENDER_EXTERNAL_URL;
-    }
-    
-    // Use SERVER_URL from config (production)
-    if (process.env.NODE_ENV === 'production' && SERVER_URL) {
+    // Use SERVER_URL from config
+    if (SERVER_URL) {
         return SERVER_URL;
     }
     
-    // For development or other deployments
+    // Fallback to localhost for development
     const port = process.env.PORT || 3000;
     return `http://localhost:${port}`;
 };

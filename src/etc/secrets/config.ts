@@ -16,11 +16,6 @@ if (!JWT_SECRET || JWT_SECRET === "fallback-secret") {
     process.exit(1);
 }
 
-if (!SERVER_URL) {
-    console.error("SERVER_URL environment variable is not set!");
-    process.exit(1);
-}
-
 console.log("Environment variables loaded successfully");
 console.log("DATABASE_URL starts with:", DATABASE_URL.substring(0, 20) + "...");
 
