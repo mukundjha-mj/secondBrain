@@ -8,6 +8,7 @@ import { DATABASE_URL, JWT_SECRET } from "./etc/secrets/config";
 import { userMiddleware } from "./Middleware";
 import { random } from "./utils";
 import cors from "cors";
+import { KeepAlive, getServerUrl } from "./keepAlive";
 
 
 
@@ -25,6 +26,16 @@ app.use(cors({
 }));
 
 app.use(express.json())
+
+// Health check endpoint for keep-alive pings
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        message: 'Server is running and healthy'
+    });
+});
 
 app.post('/api/v1/signup', async (req, res) => {
     const requireBody = z.object({
@@ -228,9 +239,21 @@ app.post('/api/v1/brain/:shareLink', async (req, res) => {
 mongoose.connect(DATABASE_URL)
     .then(() => {
         console.log("Connected to DataBase");
-        app.listen(PORT)
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on port ${PORT}`);
+            
+            // Start keep-alive service only in production (Render)
+            if (process.env.NODE_ENV === 'production' || process.env.RENDER_EXTERNAL_URL) {
+                const serverUrl = getServerUrl();
+                const keepAlive = new KeepAlive(serverUrl, 8); // Ping every 8 minutes
+                keepAlive.start();
+                
+                console.log('🔄 Keep-alive service initialized for production');
+            } else {
+                console.log('🏠 Running in development mode - Keep-alive service disabled');
+            }
+        });
     })
     .catch((e) => {
         console.log("Database connection Error", e);
-
-    })
+    });

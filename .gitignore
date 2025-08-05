@@ -46,3 +46,6 @@ coverage/
 .stylelintcache
 # Optional cache directory for prettier
 .prettier-cache
+
+DEPLOYMENT_GUIDE.md
+KEEP_ALIVE_README.md
