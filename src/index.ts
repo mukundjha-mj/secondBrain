@@ -242,15 +242,12 @@ mongoose.connect(DATABASE_URL)
         app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
             
-            // Start keep-alive service only in production (Render)
-            if (process.env.NODE_ENV === 'production' || process.env.RENDER_EXTERNAL_URL) {
-                const serverUrl = getServerUrl();
+            // Start keep-alive service 
+            const serverUrl = getServerUrl();
+            if (serverUrl) {
                 const keepAlive = new KeepAlive(serverUrl, 8); // Ping every 8 minutes
                 keepAlive.start();
-                
-                console.log('🔄 Keep-alive service initialized for production');
-            } else {
-                console.log('🏠 Running in development mode - Keep-alive service disabled');
+                console.log('🔄 Keep-alive service started');
             }
         });
     })
