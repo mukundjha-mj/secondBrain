@@ -7,9 +7,11 @@ import { SERVER_URL } from './etc/secrets/config';
 async function testKeepAlive() {
     console.log('🧪 Testing Keep-Alive functionality...\n');
     
-    const serverUrl = getServerUrl();
+    // For testing, always use the production URL
+    const serverUrl = SERVER_URL || 'https://secondbrain-1urp.onrender.com';
     console.log(`📡 Testing URL: ${serverUrl}`);
     console.log(`🔧 SERVER_URL from config: ${SERVER_URL}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}\n`);
     
     try {
         // Test health endpoint directly

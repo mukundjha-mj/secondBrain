@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
-    "start": "NODE_ENV=production node dist/index.js",
+    "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "render-deploy": "npm run build && npm start",
-    "test:keepalive": "npx ts-node src/testKeepAlive.ts"
+    "render-deploy": "npm run build && npm start"
   },
   "keywords": [],
   "author": "",
